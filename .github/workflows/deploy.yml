@@ -1,0 +1,40 @@
+name: Deploy Vue App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Скачиваем (checkout) репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Устанавливаем последнюю LTS версию Node.js
+      - name: Use Node.js (latest LTS)
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      # 3. Устанавливаем зависимости
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Собираем Vue-приложение
+      - name: Build Vue App
+        run: npm run build
+
+      # 5. Копируем готовые файлы на сервер (пример с appleboy/scp-action)
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "dist/*"
+          target: "/var/www/habr"
+          overwrite: true

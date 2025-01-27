@@ -1,11 +1,9 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <div>1</div>
+  <div id="app">
+    <SuggestInput />
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<script lang="ts" setup>
+import SuggestInput from '@/components/SuggestInput.vue';
+</script>
